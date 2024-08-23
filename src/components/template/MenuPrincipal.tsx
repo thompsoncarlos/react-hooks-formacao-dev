@@ -1,25 +1,18 @@
-import { IconMenu, IconX, IconNumbers } from "@tabler/icons";
+import { IconMenu, IconX } from '@tabler/icons'; 
 import { MenuItem } from "../../data/models/MenuItem";
 import { MenuSecao } from "../../data/models/MenuSecao";
 import Logo from "./Logo";
 import MenuPrincipalItem from "./MenuPrincipalItem";
 import MenuPrincipalSecao from "./MenuPrincipalSecao";
 import Flex from "./Flex";
+import useMenu from "@/data/hooks/useMenu";
 
 export default function MenuPrincipal() {
-    const secoes = [
-        {
-            titulo: "Essenciais",
-            aberta: true,
-            itens: [
-                {titulo: "Contador", url: "/essenciais/contador", tag:"useState", icone:<IconNumbers />}
-            ],
-        },
-    ];
-    const mini = false;
+    const {secoes, mini, toggleMini, alternarSecao} = useMenu();
+
     function renderizarSecoes() {
         return secoes.map((secao: MenuSecao) => (
-            <MenuPrincipalSecao key={secao.titulo} titulo={secao.titulo} mini={mini} aberta={secao.aberta}>
+            <MenuPrincipalSecao key={secao.titulo} titulo={secao.titulo} mini={mini} aberta={secao.aberta} onClick={() => alternarSecao(secao)}>
                 {renderizarItens(secao)}
             </MenuPrincipalSecao>
         ));
@@ -34,6 +27,7 @@ export default function MenuPrincipal() {
                 tag={item.tag}
                 url={item.url}
                 mini={mini}
+                selecionado={item.selecionado}
             />
         ));
     }
@@ -50,6 +44,9 @@ export default function MenuPrincipal() {
         >
             <Flex center className="m-7">
                 {!mini && <Logo />}
+                <div className="cursor-pointer" onClick={toggleMini}>
+                    {mini ? <IconMenu /> : <IconX />}
+                </div>
             </Flex>
             <nav className="flex flex-col gap-4 m-7">{renderizarSecoes()}</nav>
         </aside>
